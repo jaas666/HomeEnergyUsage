@@ -132,7 +132,7 @@
       "pluginVersion": "7.4.0",
       "targets": [
         {
-          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"W\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => \n      r[\"entity_id\"] =~ /.*_power_minute_average$/ or \n      r[\"entity_id\"] =~ /athom_without_relay_plug_(f24c40|f254a0)_power/\n  )\n  |> filter(fn: (r) => r[\"entity_id\"] != \"balance_power_minute_average\")\n  |> filter(fn: (r) => r[\"entity_id\"] != \"vue_power_minute_average\")\n  |> filter(fn: (r) => r._value > 5.0)\n  |> last()\n  |> top(n: 5, columns: [\"_value\"])\n  |> yield(name: \"top5\")",
+          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"W\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => \n      r[\"entity_id\"] =~ /.*_power_minute_average$/ or \n      r[\"entity_id\"] =~ /athom_without_relay_plug_(f24c40|f254a0)_power/\n  )\n  |> filter(fn: (r) => r[\"entity_id\"] != \"balance_power_minute_average\")\n  |> filter(fn: (r) => r[\"entity_id\"] != \"vue_power_minute_average\")\n  |> filter(fn: (r) => r._value > 5.0)\n  |> last()\n  |> group()\n  |> top(n: 5, columns: [\"_value\"])\n  |> yield(name: \"top5\")",
           "refId": "A"
         }
       ],
@@ -185,7 +185,7 @@
       "pluginVersion": "7.4.0",
       "targets": [
         {
-          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"kWh\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] == \"vue_energy_this_month\")\n  |> last()\n  |> yield(name: \"monthly_total\")",
+          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"kWh\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] == \"vue_energy_this_month\")\n  |> last()\n  |> yield(name: \"monthly_total\")",
           "refId": "A"
         }
       ],
@@ -239,7 +239,7 @@
       "pluginVersion": "7.4.0",
       "targets": [
         {
-          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"kWh\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] == \"vue_energy_this_month\")\n  |> last()\n  |> map(fn: (r) => ({ r with _value: (r._value * 0.0965) * 1.05 + 14.0 }))\n  |> yield(name: \"monthly_bill\")",
+          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"kWh\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] == \"vue_energy_this_month\")\n  |> last()\n  |> map(fn: (r) => ({ r with _value: (r._value * 0.0965) * 1.05 + 14.0 }))\n  |> yield(name: \"monthly_bill\")",
           "refId": "A"
         }
       ],
@@ -409,7 +409,7 @@
       "pluginVersion": "7.4.0",
       "targets": [
         {
-          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -5m)\n  |> filter(fn: (r) => r._measurement == \"kWh\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /.*_energy_this_month$/)\n  |> filter(fn: (r) => r[\"entity_id\"] != \"balance_energy_this_month\")\n  |> filter(fn: (r) => r[\"entity_id\"] != \"vue_energy_this_month\")\n  |> last()\n  |> yield(name: \"monthly_by_device\")",
+          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -1h)\n  |> filter(fn: (r) => r._measurement == \"kWh\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => r[\"entity_id\"] =~ /.*_energy_this_month$/)\n  |> filter(fn: (r) => r[\"entity_id\"] != \"balance_energy_this_month\")\n  |> filter(fn: (r) => r[\"entity_id\"] != \"vue_energy_this_month\")\n  |> last()\n  |> yield(name: \"monthly_by_device\")",
           "refId": "A"
         }
       ],
@@ -495,7 +495,7 @@
       "pluginVersion": "7.3.7",
       "targets": [
         {
-          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -7d)\n  |> filter(fn: (r) => r._measurement == \"kWh\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => \n      r[\"entity_id\"] =~ /.*_energy_today$/ or \n      r[\"entity_id\"] =~ /athom_without_relay_plug_(f24c40|f254a0)_energy$/\n  )\n  |> filter(fn: (r) => r[\"entity_id\"] != \"balance_energy_today\")\n  |> filter(fn: (r) => r[\"entity_id\"] != \"vue_energy_today\")\n  |> difference(nonNegative: true)\n  |> group(columns: [\"entity_id\"])\n  |> sum()\n  |> group()\n  |> top(n: 5, columns: [\"_value\"])\n  |> yield(name: \"top5_week\")",
+          "query": "from(bucket: \"HomeAssistant\")\n  |> range(start: -7d)\n  |> filter(fn: (r) => r._measurement == \"kWh\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> filter(fn: (r) => \n      r[\"entity_id\"] =~ /.*_energy_today$/ or \n      r[\"entity_id\"] =~ /athom_without_relay_plug_(f24c40|f254a0)_energy$/\n  )\n  |> filter(fn: (r) => r[\"entity_id\"] != \"balance_energy_today\")\n  |> filter(fn: (r) => r[\"entity_id\"] != \"vue_energy_today\")\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> group(columns: [\"entity_id\"])\n  |> sum()\n  |> group()\n  |> top(n: 5, columns: [\"_value\"])\n  |> yield(name: \"top5_week\")",
           "refId": "A"
         }
       ],
